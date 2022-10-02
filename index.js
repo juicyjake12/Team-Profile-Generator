@@ -1,9 +1,9 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
 const path = require("path");
-const manager = require("./lib/manager.js");
-const engineer = require("./lib/engineer");
-const intern = require("./lib/intern.js");
+const Manager = require("./lib/Manager.js");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern.js");
 const outPutDir = path.resolve(__dirname, "output");
 const outputPath = path.join(outPutDir, "index.html");
 const generateTeams = require("./src/template.js");
@@ -14,25 +14,28 @@ function runapp() {
 
     function createTeam() {
         inquirer.prompt([{
-            type: "List",
-            message: "What type of employee would you like to add?",
+            type: "list",
+            message: "What type of employee would you like to add to your team?",
             name: "addEmployeePrompt",
-            choices: ["Manager", "Engineer", "Intern", "No more team members."]
+            choices: ["Manager", "Engineer", "Intern", "No more team members are needed."]
         }]).then(function (userInput) {
             switch (userInput.addEmployeePrompt) {
-                case "Manager": addManager()
+                case "Manager":
+                    addManager();
                     break;
-                case "Engineer": addEngineer()
+                case "Engineer":
+                    addEngineer();
                     break;
-                case "Intern": addIntern()
+                case "Intern":
+                    addIntern();
                     break;
 
-                default: htmlBuilder();
+                default:
+                    htmlBuilder();
             }
         })
     }
 
-    //functions adding team members
     function addManager() {
         inquirer.prompt([
             {
@@ -56,7 +59,7 @@ function runapp() {
                 message: "What is managers office number?"
             },
         ]).then(answers => {
-            const manager = new manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOfficeNumber);
+            const manager = new Manager(answers.managerName, answers.managerId, answers.managerEmail, answers.managerOfficeNumber);
             teamArray.push(manager);
             createTeam();
         })
@@ -85,7 +88,7 @@ function runapp() {
                 message: "What is the engineers Github username?"
             }
         ]).then(answers => {
-            const engineer = new engineer(answers.engineerName, answers.engineerId, answers.engineerEmail, answers.engineerGithub);
+            const engineer = new Engineer(answers.engineerName, answers.engineerId, answers.engineerEmail, answers.engineerGithub);
             teamArray.push(engineer);
             createTeam();
         })
@@ -113,10 +116,10 @@ function runapp() {
                 message: "What school does the intern attend?"
             }
         ]).then(answers => {
-            const intern = new intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
+            const intern = new Intern(answers.internName, answers.internId, answers.internEmail, answers.internSchool);
             teamArray.push(intern);
             createTeam();
-        })
+        });
     }
 
     function htmlBuilder() {
@@ -127,5 +130,6 @@ function runapp() {
 
     createTeam();
 }
+
 
 runapp()
